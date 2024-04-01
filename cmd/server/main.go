@@ -41,6 +41,11 @@ func (s *Server) Perimeter(
 	}, nil
 }
 
+func (s *Server) CircleArea(ctx context.Context, circle *pb.Circle) (*pb.AreaResponse, error) {
+	log.Println("invoked Area of Circle: ", circle)
+	return &pb.AreaResponse{Result: 3.14 * circle.Radius}, nil
+}
+
 func main() {
 	host := "localhost"
 	port := "5000"
