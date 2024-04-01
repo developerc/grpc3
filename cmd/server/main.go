@@ -46,6 +46,11 @@ func (s *Server) CircleArea(ctx context.Context, circle *pb.Circle) (*pb.AreaRes
 	return &pb.AreaResponse{Result: 3.14 * circle.Radius}, nil
 }
 
+func (s *Server) TriangleArea(ctx context.Context, triangle *pb.Triangle) (*pb.AreaResponse, error) {
+	log.Println("invoked Area of Triangle: ", triangle)
+	return &pb.AreaResponse{Result: 0.5 * triangle.Height * triangle.Width}, nil
+}
+
 func main() {
 	host := "localhost"
 	port := "5000"
