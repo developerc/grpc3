@@ -15,9 +15,14 @@ message AreaResponse {
 message PermiterResponse {
     float result = 1;
 }
+// Сообщение параметры круга
+message Circle {
+    float radius = 1;
+}
 // Определение сервиса с двумя методами
 service GeometryService {
 	// методы, которые можно будет реализовать и использовать 
     rpc Area (RectRequest) returns (AreaResponse); 
     rpc Perimeter (RectRequest) returns (PermiterResponse);
+    rpc CircleArea(Circle) returns (AreaResponse);
 }
