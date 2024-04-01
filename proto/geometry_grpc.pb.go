@@ -26,6 +26,7 @@ type GeometryServiceClient interface {
 	Area(ctx context.Context, in *RectRequest, opts ...grpc.CallOption) (*AreaResponse, error)
 	Perimeter(ctx context.Context, in *RectRequest, opts ...grpc.CallOption) (*PermiterResponse, error)
 	CircleArea(ctx context.Context, in *Circle, opts ...grpc.CallOption) (*AreaResponse, error)
+	TriangleArea(ctx context.Context, in *Triangle, opts ...grpc.CallOption) (*AreaResponse, error)
 }
 
 type geometryServiceClient struct {
@@ -63,6 +64,15 @@ func (c *geometryServiceClient) CircleArea(ctx context.Context, in *Circle, opts
 	return out, nil
 }
 
+func (c *geometryServiceClient) TriangleArea(ctx context.Context, in *Triangle, opts ...grpc.CallOption) (*AreaResponse, error) {
+	out := new(AreaResponse)
+	err := c.cc.Invoke(ctx, "/geometry.GeometryService/TriangleArea", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GeometryServiceServer is the server API for GeometryService service.
 // All implementations must embed UnimplementedGeometryServiceServer
 // for forward compatibility
@@ -71,6 +81,7 @@ type GeometryServiceServer interface {
 	Area(context.Context, *RectRequest) (*AreaResponse, error)
 	Perimeter(context.Context, *RectRequest) (*PermiterResponse, error)
 	CircleArea(context.Context, *Circle) (*AreaResponse, error)
+	TriangleArea(context.Context, *Triangle) (*AreaResponse, error)
 	mustEmbedUnimplementedGeometryServiceServer()
 }
 
@@ -86,6 +97,9 @@ func (UnimplementedGeometryServiceServer) Perimeter(context.Context, *RectReques
 }
 func (UnimplementedGeometryServiceServer) CircleArea(context.Context, *Circle) (*AreaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CircleArea not implemented")
+}
+func (UnimplementedGeometryServiceServer) TriangleArea(context.Context, *Triangle) (*AreaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TriangleArea not implemented")
 }
 func (UnimplementedGeometryServiceServer) mustEmbedUnimplementedGeometryServiceServer() {}
 
@@ -154,6 +168,24 @@ func _GeometryService_CircleArea_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GeometryService_TriangleArea_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Triangle)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GeometryServiceServer).TriangleArea(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/geometry.GeometryService/TriangleArea",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GeometryServiceServer).TriangleArea(ctx, req.(*Triangle))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GeometryService_ServiceDesc is the grpc.ServiceDesc for GeometryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -172,6 +204,10 @@ var GeometryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CircleArea",
 			Handler:    _GeometryService_CircleArea_Handler,
+		},
+		{
+			MethodName: "TriangleArea",
+			Handler:    _GeometryService_TriangleArea_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

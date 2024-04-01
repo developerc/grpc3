@@ -19,10 +19,16 @@ message PermiterResponse {
 message Circle {
     float radius = 1;
 }
+// Сообщение параметры треугольника
+message Triangle {
+    float height = 1; // числа здесь - порядок полей в сообщении
+    float width = 2;
+}
 // Определение сервиса с двумя методами
 service GeometryService {
 	// методы, которые можно будет реализовать и использовать 
     rpc Area (RectRequest) returns (AreaResponse); 
     rpc Perimeter (RectRequest) returns (PermiterResponse);
     rpc CircleArea(Circle) returns (AreaResponse);
+    rpc TriangleArea(Triangle) returns (AreaResponse);
 }
